@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Arduino Blink Bot</title>
+
+<style>
+
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#4facfe,#00f2fe);
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:15px;
+width:420px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1{
+margin-bottom:10px;
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:16px;
+margin-top:15px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:15px;
+padding:12px 20px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:#4facfe;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#3a8de0;
+}
+
+.result{
+margin-top:20px;
+font-size:20px;
+font-weight:bold;
+}
+
+.instructions{
+margin-top:20px;
+font-size:14px;
+color:#444;
+}
+
+.try{
+margin-top:15px;
+display:none;
+background:#ff6b6b;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Arduino Blink Bot</h1>
+
+<p>Ask a YES/NO or TRUE/FALSE question.</p>
+
+<input id="question" placeholder="Example: Is Delhi capital of India?">
+
+<button onclick="ask()">Send Question</button>
+
+<div class="result" id="result"></div>
+
+<button class="try" id="tryBtn" onclick="reload()">Try Again</button>
+
+<div class="instructions">
+
+<p><b>Instructions:</b></p>
+
+<p>1 Blink → TRUE</p>
+<p>2 Blinks → FALSE</p>
+
+</div>
+
+</div>
+
+<script>
+
+async function ask(){
+
+let q=document.getElementById("question").value;
+
+let res=await fetch("/ask",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({question:q})
+});
+
+let data=await res.json();
+
+let r=data.result;
+
+let text="";
+
+if(r==="true")
+text="✅ TRUE → Arduino will blink ONCE";
+
+else
+text="❌ FALSE → Arduino will blink TWICE";
+
+document.getElementById("result").innerText=text;
+
+document.getElementById("tryBtn").style.display="block";
+
+}
+
+function reload(){
+location.reload();
+}
+
+</script>
+
+</body>
+
+</html>
